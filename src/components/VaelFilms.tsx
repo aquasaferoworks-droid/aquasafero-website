@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Play } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
 const films = [
   { id: 'gJKxIAmhbvg', tag: 'Narrative', title: 'Hawthorn', meta: 'Feature Film — 2024 — 112 min', award: 'Cannes 2024' },
@@ -26,8 +26,8 @@ export function VaelFilms() {
   const [hoveredFilm, setHoveredFilm] = useState<string | null>(null);
 
   const getCleanYoutubeEmbed = (id: string, isHovered: boolean) => {
-    // Only play when hovered, muted, no controls, modest branding
-    return `https://www.youtube.com/embed/${id}?autoplay=${isHovered ? 1 : 0}&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}`;
+    // Mute required for autoplay
+    return `https://www.youtube.com/embed/${id}?autoplay=${isHovered ? 1 : 0}&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
   };
 
   return (
@@ -57,52 +57,51 @@ export function VaelFilms() {
               className={`group relative overflow-hidden bg-black aspect-video cursor-pointer transition-all ${isLarge ? 'md:col-span-2 lg:col-span-2 md:aspect-[21/9]' : ''}`}
             >
               {/* Thumbnail Image - Hidden on hover to reveal video */}
-              <div className={`absolute inset-0 z-10 transition-opacity duration-700 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
+              <div className={`absolute inset-0 z-20 transition-opacity duration-700 pointer-events-none ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
                 <Image 
                   src={`https://img.youtube.com/vi/${film.id}/maxresdefault.jpg`} 
                   alt={film.title}
                   fill
                   className="object-cover grayscale group-hover:scale-110 transition-transform duration-1000"
-                  data-ai-hint="cinematic scene"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
               </div>
 
               {/* Autoplay Video Embed on Hover */}
               {isHovered && (
-                <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 z-10 pointer-events-none scale-[1.3]">
                   <iframe
-                    className="w-full h-full scale-[1.5]"
+                    className="w-full h-full"
                     src={getCleanYoutubeEmbed(film.id, true)}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   />
-                  {/* Clean YouTube logo mask */}
-                  <div className="absolute inset-0 z-20 pointer-events-none" />
+                  {/* Mask to ensure clean UI */}
+                  <div className="absolute inset-0 z-20" />
                 </div>
               )}
               
               {/* UI Overlay */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-30">
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-40">
                 <div className="w-16 h-16 rounded-full border border-primary/50 flex items-center justify-center bg-black/20 backdrop-blur-sm group-hover:scale-110 transition-transform">
                   <Play className="w-6 h-6 text-primary fill-primary" />
                 </div>
               </div>
 
               {film.award && (
-                <div className="absolute top-6 right-6 border border-primary/40 px-3 py-1 text-[9px] tracking-[0.2em] text-primary uppercase z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute top-6 right-6 border border-primary/40 px-3 py-1 text-[9px] tracking-[0.2em] text-primary uppercase z-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   {film.award}
                 </div>
               )}
 
-              <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out z-30">
+              <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out z-40">
                 <span className="text-[9px] tracking-[0.4em] text-primary uppercase mb-2 block font-body">0{idx + 1} / {film.tag}</span>
                 <h3 className="text-2xl md:text-4xl font-headline text-white mb-2 italic">{film.title}</h3>
                 <p className="text-[10px] tracking-[0.2em] text-white/50 uppercase font-body">{film.meta}</p>
               </div>
               
-              {/* Logo/Branding mask */}
-              <div className="absolute top-0 right-0 w-24 h-16 pointer-events-none z-[40] bg-transparent" />
+              {/* Branding Mask */}
+              <div className="absolute top-0 right-0 w-24 h-16 pointer-events-none z-[50] bg-transparent" />
             </div>
           )
         })}
