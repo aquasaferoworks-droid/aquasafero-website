@@ -3,17 +3,25 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
-import { motion } from 'framer-motion';
-import { Play } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Play, X } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from '@/components/ui/dialog';
 
 interface SlideItem {
   id: string;
   title: string;
   category: string;
   imageUrl: string;
-  youtubeId?: string;
+  youtubeId: string;
+  role: string;
 }
 
 const slides: SlideItem[] = [
@@ -21,6 +29,7 @@ const slides: SlideItem[] = [
     id: '1',
     title: 'HAWTHORN',
     category: 'directed by errol aditya',
+    role: 'DIRECTOR / VISIONARY',
     imageUrl: 'https://picsum.photos/seed/slide1/1200/800',
     youtubeId: 'gJKxIAmhbvg',
   },
@@ -28,6 +37,7 @@ const slides: SlideItem[] = [
     id: '2',
     title: 'VERMILION',
     category: 'visual narrative',
+    role: 'CINEMATOGRAPHER',
     imageUrl: 'https://picsum.photos/seed/slide2/1200/800',
     youtubeId: 'QdEZtNyJb5g',
   },
@@ -35,6 +45,7 @@ const slides: SlideItem[] = [
     id: '3',
     title: 'NOCTURNE',
     category: 'cinematography',
+    role: 'DIRECTOR / VISIONARY',
     imageUrl: 'https://picsum.photos/seed/slide3/1200/800',
     youtubeId: 'O1p-JVaAQV0',
   },
@@ -42,6 +53,7 @@ const slides: SlideItem[] = [
     id: '4',
     title: 'AUREATE',
     category: 'commissioned cinema',
+    role: 'CREATIVE DIRECTOR',
     imageUrl: 'https://picsum.photos/seed/slide4/1200/800',
     youtubeId: 'xTrPSfbWa0w',
   },
@@ -59,6 +71,7 @@ export function VaelSlider() {
   );
 
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedVideo, setSelectedVideo] = useState<SlideItem | null>(null);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -72,9 +85,9 @@ export function VaelSlider() {
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
 
-  const getYoutubeEmbed = (id: string, isSelected: boolean) => {
+  const getYoutubeEmbed = (id: string, isSelected: boolean, isModal: boolean = false) => {
     const base = `https://www.youtube.com/embed/${id}`;
-    const params = `?autoplay=${isSelected ? 1 : 0}&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
+    const params = `?autoplay=${isSelected || isModal ? 1 : 0}&mute=${isModal ? 0 : 1}&controls=${isModal ? 1 : 0}&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
     return base + params;
   };
 
@@ -99,6 +112,7 @@ export function VaelSlider() {
               <div 
                 key={slide.id} 
                 className="embla__slide flex-[0_0_90%] md:flex-[0_0_75%] min-w-0 px-3 md:px-10 relative"
+                onClick={() => setSelectedVideo(slide)}
               >
                 <motion.div
                   initial={false}
@@ -107,40 +121,30 @@ export function VaelSlider() {
                     opacity: isActive ? 1 : 0.4,
                   }}
                   transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-                  className="relative aspect-[16/9] md:aspect-[21/10] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] bg-black group cursor-grab active:cursor-grabbing border border-black/5"
+                  className="relative aspect-[16/9] md:aspect-[21/10] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] bg-black group cursor-pointer border border-black/5"
                 >
-                  {/* Background Image / Video */}
-                  {slide.youtubeId ? (
-                    <div className="absolute inset-0 pointer-events-none transform scale-[1.3]">
-                      <iframe
-                        className="w-full h-full"
-                        src={getYoutubeEmbed(slide.youtubeId, isActive)}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      />
-                    </div>
-                  ) : (
-                    <Image
-                      src={slide.imageUrl}
-                      alt={slide.title}
-                      fill
-                      className="object-cover transition-transform duration-[4s] ease-out group-hover:scale-105"
-                      priority={index === 0}
+                  {/* Background YouTube Preview */}
+                  <div className="absolute inset-0 pointer-events-none transform scale-[1.3]">
+                    <iframe
+                      className="w-full h-full"
+                      src={getYoutubeEmbed(slide.youtubeId, isActive)}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     />
-                  )}
+                  </div>
                   
                   {/* Premium Grain & Vignette */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 z-10" />
                   <div className="absolute inset-0 cinematic-vignette opacity-40 z-10" />
 
-                  {/* Play UI if it's a video item */}
+                  {/* Play UI */}
                   <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                     <div className="w-16 h-16 md:w-24 md:h-24 rounded-full border border-white/10 bg-black/20 backdrop-blur-md flex items-center justify-center transition-all duration-500 hover:scale-110 hover:bg-primary/20 hover:border-primary/40">
                       <Play className="w-6 h-6 md:w-8 md:h-8 text-white fill-white ml-1" />
                     </div>
                   </div>
 
-                  {/* Text Content - Credit Style */}
+                  {/* Text Content */}
                   <div className="absolute bottom-10 left-10 md:bottom-20 md:left-20 z-30 pointer-events-none">
                     <motion.div
                       animate={{ 
@@ -179,6 +183,54 @@ export function VaelSlider() {
           />
         ))}
       </div>
+
+      {/* Cinematic Modal Popup */}
+      <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
+        <DialogContent className="max-w-[95vw] md:max-w-[85vw] bg-black/90 backdrop-blur-2xl border-white/5 p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] rounded-none aspect-video">
+          <DialogTitle className="sr-only">
+            {selectedVideo?.title} — {selectedVideo?.category}
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Viewing {selectedVideo?.title} directed by Errol Aditya.
+          </DialogDescription>
+          
+          <AnimatePresence>
+            {selectedVideo && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+                className="relative w-full h-full flex items-center justify-center group/modal"
+              >
+                {/* Chromeless Video Player */}
+                <iframe
+                  className="w-full h-full"
+                  src={getYoutubeEmbed(selectedVideo.youtubeId, true, true)}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                />
+
+                {/* Director Metadata Overlay */}
+                <div className="absolute top-8 right-16 z-[60] pointer-events-none">
+                  <span className="text-[10px] md:text-[12px] tracking-[0.6em] text-white/50 uppercase font-light">
+                    {selectedVideo.role}
+                  </span>
+                </div>
+
+                {/* Elegant Close Button */}
+                <DialogClose className="absolute top-8 right-6 z-[70] text-white/30 hover:text-white transition-all duration-300 hover:rotate-90">
+                  <X className="w-8 h-8" strokeWidth={1} />
+                  <span className="sr-only">Close Viewer</span>
+                </DialogClose>
+
+                {/* Custom Hover Shadow Overlay */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/modal:opacity-100 transition-opacity duration-700 pointer-events-none" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
