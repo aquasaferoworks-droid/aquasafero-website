@@ -57,25 +57,29 @@ const ScrollExpandMedia = ({
     if (!mounted) return;
 
     const handleWheel = (e: WheelEvent) => {
+      // If fully expanded and at the top, allow collapsing back
       if (mediaFullyExpanded) {
-        if (window.scrollY <= 0 && e.deltaY < 0) {
+        if (window.scrollY <= 10 && e.deltaY < 0) {
           setMediaFullyExpanded(false);
           setScrollProgress(0.99);
-          e.preventDefault();
+          // e.preventDefault(); // Don't block for a smooth reverse
         }
         return;
       }
 
-      e.preventDefault();
-      const scrollDelta = e.deltaY * 0.0015;
-      const newProgress = Math.min(Math.max(scrollProgress + scrollDelta, 0), 1);
-      setScrollProgress(newProgress);
+      // If not expanded, capture wheel to animate progress
+      if (!mediaFullyExpanded) {
+        e.preventDefault();
+        const scrollDelta = e.deltaY * 0.0015;
+        const newProgress = Math.min(Math.max(scrollProgress + scrollDelta, 0), 1);
+        setScrollProgress(newProgress);
 
-      if (newProgress >= 1) {
-        setMediaFullyExpanded(true);
-        setShowContent(true);
-      } else if (newProgress < 0.8) {
-        setShowContent(false);
+        if (newProgress >= 1) {
+          setMediaFullyExpanded(true);
+          setShowContent(true);
+        } else if (newProgress < 0.8) {
+          setShowContent(false);
+        }
       }
     };
 
@@ -89,31 +93,33 @@ const ScrollExpandMedia = ({
       const deltaY = touchStartY - touchY;
 
       if (mediaFullyExpanded) {
-        if (window.scrollY <= 0 && deltaY < -20) {
+        if (window.scrollY <= 10 && deltaY < -20) {
           setMediaFullyExpanded(false);
           setScrollProgress(0.99);
-          e.preventDefault();
         }
         return;
       }
 
-      e.preventDefault();
-      const scrollDelta = deltaY * 0.005;
-      const newProgress = Math.min(Math.max(scrollProgress + scrollDelta, 0), 1);
-      setScrollProgress(newProgress);
+      if (!mediaFullyExpanded) {
+        e.preventDefault();
+        const scrollDelta = deltaY * 0.005;
+        const newProgress = Math.min(Math.max(scrollProgress + scrollDelta, 0), 1);
+        setScrollProgress(newProgress);
 
-      if (newProgress >= 1) {
-        setMediaFullyExpanded(true);
-        setShowContent(true);
-      } else if (newProgress < 0.8) {
-        setShowContent(false);
+        if (newProgress >= 1) {
+          setMediaFullyExpanded(true);
+          setShowContent(true);
+        } else if (newProgress < 0.8) {
+          setShowContent(false);
+        }
       }
 
       setTouchStartY(touchY);
     };
 
     const handleScroll = (): void => {
-      if (!mediaFullyExpanded) {
+      // Block body scroll until expanded
+      if (!mediaFullyExpanded && typeof window !== 'undefined' && window.scrollY > 0) {
         window.scrollTo(0, 0);
       }
     };
@@ -137,6 +143,8 @@ const ScrollExpandMedia = ({
     let videoId = '';
     if (url.includes('v=')) {
       videoId = url.split('v=')[1]?.split('&')[0];
+    } else if (url.includes('si=')) {
+        videoId = url.split('/').pop()?.split('?')[0] || '';
     } else {
       videoId = url.split('/').pop()?.split('?')[0] || '';
     }
@@ -175,9 +183,9 @@ const ScrollExpandMedia = ({
         </motion.div>
 
         <div className='relative flex flex-col items-center justify-center min-h-screen w-full'>
-          {/* Media Container - Sharp Cinematic Edges */}
+          {/* Media Container - Sharp Corners */}
           <div
-            className='absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-hidden shadow-2xl clean-video-wrapper'
+            className='absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-hidden shadow-2xl clean-video-wrapper bg-black'
             style={{
               width: `${mediaWidth}px`,
               height: `${mediaHeight}px`,
@@ -186,7 +194,7 @@ const ScrollExpandMedia = ({
             }}
           >
             {mediaType === 'video' ? (
-              <div className='relative w-full h-full pointer-events-none bg-black'>
+              <div className='relative w-full h-full pointer-events-none'>
                 <iframe
                   width='100%'
                   height='100%'
@@ -196,7 +204,6 @@ const ScrollExpandMedia = ({
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                 />
                 <div className='absolute inset-0 bg-primary/5 mix-blend-overlay' />
-                {/* Brand Hide Overlay */}
                 <div className="absolute top-0 right-0 w-32 h-20 bg-black/10 z-30" />
               </div>
             ) : (

@@ -20,6 +20,10 @@ const films = [
 ];
 
 export function VaelFilms() {
+  const getCleanYoutubeUrl = (id: string) => {
+    return `https://www.youtube.com/embed/${id}?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=1`;
+  };
+
   return (
     <section id="work" className="py-32 bg-background px-8 md:px-16">
       <div className="max-w-7xl mx-auto mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8">
