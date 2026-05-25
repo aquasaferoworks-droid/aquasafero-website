@@ -166,15 +166,15 @@ export function VaelReel() {
   const edgeVSvg = `data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 0V64' stroke='white' stroke-width='1'/%3E%3C/svg%3E`;
 
   const reelVideos = [
-    "https://player.vimeo.com/external/517047029.hd.mp4?s=018335f6f8905391696e1074a3f5f3e2646c0542&profile_id=175",
-    "https://player.vimeo.com/external/494252666.hd.mp4?s=2f5577346418342774d009fa5d60893325c8991b&profile_id=175",
-    "https://player.vimeo.com/external/494252666.hd.mp4?s=2f5577346418342774d009fa5d60893325c8991b&profile_id=175",
-    "https://player.vimeo.com/external/517047029.hd.mp4?s=018335f6f8905391696e1074a3f5f3e2646c0542&profile_id=175",
-    "https://player.vimeo.com/external/494252666.hd.mp4?s=2f5577346418342774d009fa5d60893325c8991b&profile_id=175",
-    "https://player.vimeo.com/external/517047029.hd.mp4?s=018335f6f8905391696e1074a3f5f3e2646c0542&profile_id=175",
-    "https://player.vimeo.com/external/494252666.hd.mp4?s=2f5577346418342774d009fa5d60893325c8991b&profile_id=175",
-    "https://player.vimeo.com/external/517047029.hd.mp4?s=018335f6f8905391696e1074a3f5f3e2646c0542&profile_id=175",
-    "https://player.vimeo.com/external/494252666.hd.mp4?s=2f5577346418342774d009fa5d60893325c8991b&profile_id=175",
+    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622196/new107_qhrklf.mp4",
+    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779621768/new105_meaomd.mp4",
+    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622220/new108_k1a47m.mp4",
+    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622196/new107_qhrklf.mp4",
+    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779621768/new105_meaomd.mp4",
+    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622220/new108_k1a47m.mp4",
+    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622196/new107_qhrklf.mp4",
+    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779621768/new105_meaomd.mp4",
+    "https://res.cloudinary.com/dy4bqxt8p/video/upload/v1779622220/new108_k1a47m.mp4",
   ];
 
   const frames: Frame[] = reelVideos.map((vid, i) => ({

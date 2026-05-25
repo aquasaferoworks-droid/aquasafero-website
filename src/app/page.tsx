@@ -5,6 +5,7 @@ import { VaelReel } from '@/components/VaelReel';
 import { VaelAwards } from '@/components/VaelAwards';
 import { VaelContact } from '@/components/VaelContact';
 import { VaelFooter } from '@/components/VaelFooter';
+import { VaelPlatforms } from '@/components/VaelPlatforms';
 import ScrollExpandMedia from '@/components/ScrollExpandMedia';
 
 export default function Home() {
@@ -28,6 +29,7 @@ export default function Home() {
         <VaelAbout />
         <VaelFilms />
         <VaelReel />
+        <VaelPlatforms />
         <VaelAwards />
         <VaelContact />
         <VaelFooter />
