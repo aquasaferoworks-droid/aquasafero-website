@@ -48,7 +48,6 @@ export function VaelHeader() {
   }, []);
 
   const reelYoutubeId = "gJKxIAmhbvg";
-  // Optimized Chromeless URL
   const reelUrl = `https://www.youtube.com/embed/${reelYoutubeId}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${reelYoutubeId}&enablejsapi=1`;
 
   return (

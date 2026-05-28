@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Dialog,
@@ -81,26 +81,26 @@ export function VaelSlider() {
   };
 
   return (
-    <section className="relative w-full bg-background pt-32 pb-24 md:pt-48 md:pb-40 min-h-[100vh] flex flex-col justify-center overflow-hidden select-none">
+    <section className="relative w-full bg-black pt-32 pb-24 md:pt-48 md:pb-40 min-h-[100vh] flex flex-col justify-center overflow-hidden select-none">
       <div className="embla overflow-visible" ref={emblaRef}>
-        <div className="embla__container flex">
+        <div className="embla__container flex items-center">
           {slides.map((slide, index) => {
             const isActive = selectedIndex === index;
             
             return (
               <div 
                 key={slide.id} 
-                className="embla__slide flex-[0_0_80%] md:flex-[0_0_40%] min-w-0 px-4 md:px-10 relative"
+                className="embla__slide flex-[0_0_85%] md:flex-[0_0_65%] min-w-0 px-2 md:px-6 relative"
                 onClick={() => setSelectedVideo(slide)}
               >
                 <motion.div
                   initial={false}
                   animate={{ 
-                    scale: isActive ? 1 : 0.9,
-                    opacity: isActive ? 1 : 0.4,
+                    scale: isActive ? 1.05 : 0.85,
+                    opacity: isActive ? 1 : 0.3,
                   }}
-                  transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-                  className="relative aspect-[16/9] md:aspect-[21/9] overflow-hidden shadow-[0_60px_120px_-20px_rgba(0,0,0,0.9)] bg-black group cursor-pointer border border-white/5 rounded-none"
+                  transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+                  className="relative aspect-video md:aspect-[21/9] overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] bg-black group cursor-pointer border border-white/5 rounded-none"
                 >
                   <div className="absolute inset-0 pointer-events-none transform scale-[1.3]">
                     <iframe
@@ -111,9 +111,22 @@ export function VaelSlider() {
                     />
                   </div>
                   
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-10" />
-                  <div className="absolute inset-0 cinematic-vignette opacity-60 z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
+                  <div className="absolute inset-0 cinematic-vignette opacity-70 z-10" />
                   
+                  {/* Play Button Icon - as seen in user reference */}
+                  {isActive && (
+                    <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 0.9, scale: 1 }}
+                        className="bg-white/10 backdrop-blur-md rounded-none p-6 border border-white/20"
+                      >
+                        <Play className="w-12 h-12 text-white fill-white" />
+                      </motion.div>
+                    </div>
+                  )}
+
                   <div className="absolute bottom-8 left-8 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
                      <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{slide.role}</span>
                      <h3 className="text-2xl md:text-4xl font-headline text-white italic tracking-tighter">{slide.title}</h3>
@@ -125,14 +138,14 @@ export function VaelSlider() {
         </div>
       </div>
 
-      <div className="flex justify-center gap-6 mt-16 md:mt-24">
+      <div className="flex justify-center gap-4 mt-16 md:mt-24">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => emblaApi?.scrollTo(i)}
             className={cn(
-              "h-1 transition-all duration-1000 rounded-none",
-              selectedIndex === i ? "w-32 bg-primary" : "w-16 bg-border hover:bg-muted-foreground/40"
+              "h-0.5 transition-all duration-1000 rounded-none",
+              selectedIndex === i ? "w-24 bg-primary" : "w-12 bg-white/10 hover:bg-white/30"
             )}
             aria-label={`Go to slide ${i + 1}`}
           />
@@ -141,8 +154,8 @@ export function VaelSlider() {
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
-          <DialogOverlay className="z-[190] bg-black/90 backdrop-blur-xl" />
-          <DialogContent className="z-[200] max-w-[95vw] md:max-w-6xl bg-black border border-white/10 p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)] rounded-none aspect-video focus:outline-none">
+          <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-2xl" />
+          <DialogContent className="z-[300] max-w-[95vw] md:max-w-6xl bg-black border border-white/10 p-0 overflow-hidden shadow-[0_0_120px_rgba(0,0,0,1)] rounded-none aspect-video focus:outline-none">
             <DialogTitle className="sr-only">
               {selectedVideo?.title} — {selectedVideo?.category}
             </DialogTitle>
@@ -164,18 +177,19 @@ export function VaelSlider() {
                     src={getYoutubeEmbed(selectedVideo.youtubeId, true, true)}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
                   />
 
-                  <div className="absolute top-6 left-8 z-[70] pointer-events-none drop-shadow-lg">
+                  <div className="absolute top-8 left-10 z-[70] pointer-events-none drop-shadow-lg">
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold">{selectedVideo.role}</span>
-                      <span className="text-2xl md:text-3xl tracking-tight text-white italic font-headline">{selectedVideo.title}</span>
+                      <span className="text-2xl md:text-3xl tracking-tight text-white italic font-headline font-bold">{selectedVideo.title}</span>
                     </div>
                   </div>
 
-                  <DialogClose className="absolute top-6 right-6 z-[201] transition-all duration-300 group/close">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-none bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center group-hover/close:border-primary/50 group-hover/close:scale-110 transition-all">
-                      <X className="w-5 h-5 md:w-6 md:h-6 text-white group-hover/close:text-primary transition-colors" strokeWidth={1.5} />
+                  <DialogClose className="absolute top-8 right-8 z-[201] transition-all duration-300 group/close">
+                    <div className="w-12 h-12 rounded-none bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center group-hover/close:border-primary/50 group-hover/close:scale-110 transition-all">
+                      <X className="w-6 h-6 text-white group-hover/close:text-primary transition-colors" strokeWidth={1.5} />
                     </div>
                     <span className="sr-only">Close Player</span>
                   </DialogClose>
