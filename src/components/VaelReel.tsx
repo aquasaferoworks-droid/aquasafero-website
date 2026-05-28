@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -38,8 +37,8 @@ const VideoCard = ({ id, aspectRatio, className = "" }: VideoCardProps) => {
       </div>
       
       {/* Cinematic Overlays */}
-      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10" />
-      <div className="absolute inset-0 cinematic-vignette opacity-40 z-10" />
+      <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-700 z-10" />
+      <div className="absolute inset-0 cinematic-vignette opacity-50 z-10" />
       
       {/* Animated Border on Hover - Cinematic Yellow */}
       <div className="absolute inset-0 border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none" />
@@ -49,30 +48,17 @@ const VideoCard = ({ id, aspectRatio, className = "" }: VideoCardProps) => {
 
 export function VaelReel() {
   return (
-    <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden">
-      <div className="max-w-[1600px] mx-auto px-8 md:px-16 space-y-12">
+    <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden border-t border-border/10">
+      <div className="max-w-[1600px] mx-auto px-8 md:px-16 space-y-8">
         
-        {/* Kinetic Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-          <div className="space-y-4">
-             <span className="text-[10px] tracking-[0.6em] uppercase text-primary font-bold block">
-              Kinetic Archive — 2024
-            </span>
-            <h2 className="text-4xl md:text-7xl font-headline italic leading-[0.9]">
-              Visual <span className="text-primary not-italic">Cadence</span>
-            </h2>
-          </div>
-          <div className="w-24 h-px bg-primary/40 hidden md:block mb-4" />
-        </div>
-
         {/* Row 1: 2 Horizontal Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <VideoCard id="gJKxIAmhbvg" aspectRatio="aspect-video" />
           <VideoCard id="QdEZtNyJb5g" aspectRatio="aspect-video" />
         </div>
 
         {/* Row 2: 2 Horizontal Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <VideoCard id="O1p-JVaAQV0" aspectRatio="aspect-video" />
           <VideoCard id="xTrPSfbWa0w" aspectRatio="aspect-video" />
         </div>
@@ -83,13 +69,13 @@ export function VaelReel() {
         </div>
 
         {/* Row 4: 2 Medium Horizontal Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <VideoCard id="sroIT5FQMqs" aspectRatio="aspect-[16/10]" />
           <VideoCard id="BYhQMzGxHmg" aspectRatio="aspect-[16/10]" />
         </div>
 
         {/* Row 5: 4 Vertical Reel-Style Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <VideoCard id="eFhx307ykrk" aspectRatio="aspect-[9/16]" />
           <VideoCard id="lya8BHX-8SY" aspectRatio="aspect-[9/16]" />
           <VideoCard id="4UATuJFYKfg" aspectRatio="aspect-[9/16]" />

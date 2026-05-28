@@ -86,12 +86,13 @@ export function VaelSlider() {
 
   const getYoutubeEmbed = (id: string, isSelected: boolean, isModal: boolean = false) => {
     const base = `https://www.youtube.com/embed/${id}`;
+    // Completely chromeless params
     const params = `?autoplay=${isSelected || isModal ? 1 : 0}&mute=${isModal ? 0 : 1}&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
     return base + params;
   };
 
   return (
-    <section className="relative w-full bg-background py-16 md:py-24 overflow-hidden select-none">
+    <section className="relative w-full bg-background pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden select-none">
       <div className="embla overflow-visible" ref={emblaRef}>
         <div className="embla__container flex">
           {slides.map((slide, index) => {
@@ -100,13 +101,13 @@ export function VaelSlider() {
             return (
               <div 
                 key={slide.id} 
-                className="embla__slide flex-[0_0_80%] md:flex-[0_0_65%] min-w-0 px-2 md:px-6 relative"
+                className="embla__slide flex-[0_0_75%] md:flex-[0_0_40%] min-w-0 px-2 md:px-6 relative"
                 onClick={() => setSelectedVideo(slide)}
               >
                 <motion.div
                   initial={false}
                   animate={{ 
-                    scale: isActive ? 1 : 0.9,
+                    scale: isActive ? 1 : 0.85,
                     opacity: isActive ? 1 : 0.3,
                   }}
                   transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
@@ -151,7 +152,7 @@ export function VaelSlider() {
       </div>
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
-        <DialogContent className="max-w-[95vw] md:max-w-[85vw] bg-black/90 backdrop-blur-2xl border-white/5 p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] rounded-none aspect-video">
+        <DialogContent className="max-w-[95vw] md:max-w-[85vw] bg-black/95 backdrop-blur-2xl border-white/5 p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)] rounded-none aspect-video">
           <DialogTitle className="sr-only">
             {selectedVideo?.title} — {selectedVideo?.category}
           </DialogTitle>

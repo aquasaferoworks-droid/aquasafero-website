@@ -17,7 +17,6 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Menu, X } from 'lucide-react';
-import VideoPlayer from '@/components/VideoPlayer';
 
 const navLinks = [
   { href: '#reel', label: 'Work Reel' },
@@ -48,7 +47,9 @@ export function VaelHeader() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const reelVideo = "https://aquasaferoworks.sirv.com/1103193_1080p_Endurance_1280x720.mp4";
+  // YouTube chromeless reel embed
+  const reelYoutubeId = "gJKxIAmhbvg";
+  const reelUrl = `https://www.youtube.com/embed/${reelYoutubeId}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${reelYoutubeId}&enablejsapi=1`;
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 px-6 py-4 md:px-16 md:py-6 flex items-center justify-between ${isScrolled ? 'bg-black/95 backdrop-blur-xl border-b border-border/40 py-4 shadow-sm' : 'bg-transparent'}`}>
@@ -57,7 +58,7 @@ export function VaelHeader() {
       </Link>
       
       {/* Desktop Navigation */}
-      <div className="hidden md:flex items-center justify-center gap-12 font-body text-[9px] tracking-[0.4em] uppercase flex-grow">
+      <div className="hidden md:flex items-center justify-center gap-16 font-body text-[9px] tracking-[0.5em] uppercase flex-grow">
         {navLinks.map((link) => (
           <Link 
             key={link.href}
@@ -72,18 +73,23 @@ export function VaelHeader() {
       <div className="flex-shrink-0 flex items-center gap-4">
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" className="hidden sm:flex rounded-none border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground font-body text-[8px] tracking-[0.3em] uppercase h-auto py-2.5 px-6 transition-all duration-300 transform hover:-translate-y-0.5">
+            <Button variant="outline" className="hidden sm:flex rounded-none border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body text-[8px] tracking-[0.4em] uppercase h-auto py-3 px-8 transition-all duration-300 transform hover:-translate-y-0.5">
               Watch Reel
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-6xl bg-black border-none p-0 rounded-none overflow-hidden aspect-video shadow-[0_0_100px_rgba(0,0,0,0.9)]">
+          <DialogContent className="max-w-6xl bg-black border-none p-0 rounded-none overflow-hidden aspect-video shadow-[0_0_120px_rgba(0,0,0,1)] outline-none">
             <DialogTitle className="sr-only">2026 Directing Reel</DialogTitle>
             <DialogDescription className="sr-only">Cinematic showcase of Errol Aditya's directorial work.</DialogDescription>
             <div className="w-full h-full flex items-center justify-center relative group">
-              <VideoPlayer src={reelVideo} />
-              <DialogClose className="absolute top-6 right-6 z-[101] text-white/40 hover:text-white transition-colors">
-                <X className="w-8 h-8" />
-                <span className="sr-only">Close</span>
+              <iframe
+                className="w-full h-full"
+                src={reelUrl}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              />
+              <DialogClose className="absolute top-6 right-6 z-[101] text-white/30 hover:text-white transition-all duration-300 hover:rotate-90">
+                <X className="w-10 h-10" strokeWidth={1} />
+                <span className="sr-only">Close Reel</span>
               </DialogClose>
             </div>
           </DialogContent>
@@ -101,12 +107,12 @@ export function VaelHeader() {
               <div className="font-headline text-xl tracking-[0.1em] italic text-white">
                 ERROL <span className="text-primary not-italic font-light">ADITYA</span>
               </div>
-              <div className="flex flex-col gap-8 font-body text-[11px] tracking-[0.5em] uppercase text-white/70">
+              <div className="flex flex-col gap-10 font-body text-[11px] tracking-[0.5em] uppercase text-white/70">
                 {navLinks.map((link) => (
                   <Link 
                     key={link.href}
                     href={link.href} 
-                    className="hover:text-primary transition-colors border-b border-border/40 pb-4"
+                    className="hover:text-primary transition-colors border-b border-border/40 pb-6"
                   >
                     {link.label}
                   </Link>
@@ -114,10 +120,10 @@ export function VaelHeader() {
               </div>
             </div>
             <div className="space-y-8">
-              <Button variant="outline" className="w-full rounded-none border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body text-[9px] tracking-[0.3em] uppercase h-auto py-4">
+              <Button variant="outline" className="w-full rounded-none border-primary text-primary hover:bg-primary hover:text-primary-foreground font-body text-[10px] tracking-[0.4em] uppercase h-auto py-5">
                 Watch Reel
               </Button>
-              <div className="flex gap-6 text-[10px] tracking-widest text-muted-foreground uppercase justify-center">
+              <div className="flex gap-8 text-[11px] tracking-widest text-muted-foreground uppercase justify-center">
                 <Link href="#">IG</Link>
                 <Link href="#">VM</Link>
                 <Link href="#">IM</Link>
