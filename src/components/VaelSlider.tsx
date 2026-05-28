@@ -86,7 +86,8 @@ export function VaelSlider() {
 
   const getYoutubeEmbed = (id: string, isSelected: boolean, isModal: boolean = false) => {
     const base = `https://www.youtube.com/embed/${id}`;
-    const params = `?autoplay=${isSelected || isModal ? 1 : 0}&mute=${isModal ? 0 : 1}&controls=${isModal ? 1 : 0}&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
+    // Strictly removed all controls (controls=0) and branding (modestbranding=1)
+    const params = `?autoplay=${isSelected || isModal ? 1 : 0}&mute=${isModal ? 0 : 1}&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
     return base + params;
   };
 

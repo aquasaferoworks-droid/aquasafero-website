@@ -20,6 +20,7 @@ export function VaelFilms() {
   const [hoveredFilm, setHoveredFilm] = useState<string | null>(null);
 
   const getCleanYoutubeEmbed = (id: string, isHovered: boolean) => {
+    // Strictly removed all controls (controls=0) and branding (modestbranding=1)
     return `https://www.youtube.com/embed/${id}?autoplay=${isHovered ? 1 : 0}&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
   };
 
@@ -59,7 +60,7 @@ export function VaelFilms() {
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-700" />
               </div>
 
-              {/* Autoplay Preview */}
+              {/* Autoplay Preview - Chromeless */}
               {isHovered && (
                 <div className="absolute inset-0 z-30 pointer-events-none scale-[1.2]">
                   <iframe
