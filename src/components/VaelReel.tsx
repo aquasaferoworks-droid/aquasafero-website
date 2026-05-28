@@ -56,7 +56,10 @@ const VideoCard = ({ video, aspectRatio, className = "", onClick }: VideoCardPro
       <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-700 z-10" />
       <div className="absolute inset-0 cinematic-vignette opacity-50 z-10" />
       
-      <div className="absolute inset-0 border border-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none" />
+      <div className="absolute bottom-6 left-6 z-20 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
+        <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{video.category}</span>
+        <h3 className="text-lg md:text-xl font-headline text-white italic tracking-tighter">{video.title}</h3>
+      </div>
     </motion.div>
   );
 };
@@ -108,7 +111,7 @@ export function VaelReel() {
           <VideoCard video={videos.m2} aspectRatio="aspect-[16/10]" onClick={setSelectedVideo} />
         </div>
 
-        {/* Row 5 -> 3 vertical reel-style video cards */}
+        {/* Row 5 -> 3 vertical reel-style video cards (User-provided IDs) */}
         <div className="grid grid-cols-3 gap-2 md:gap-8">
           <VideoCard video={videos.v1} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
           <VideoCard video={videos.v2} aspectRatio="aspect-[9/16]" onClick={setSelectedVideo} />
@@ -158,8 +161,6 @@ export function VaelReel() {
                     </div>
                     <span className="sr-only">Close Player</span>
                   </DialogClose>
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/40 pointer-events-none" />
                 </motion.div>
               )}
             </AnimatePresence>

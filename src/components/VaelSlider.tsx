@@ -20,7 +20,6 @@ interface SlideItem {
   id: string;
   title: string;
   category: string;
-  imageUrl: string;
   youtubeId: string;
   role: string;
 }
@@ -31,24 +30,21 @@ const slides: SlideItem[] = [
     title: 'HAWTHORN',
     category: 'directed by errol aditya',
     role: 'DIRECTOR / VISIONARY',
-    imageUrl: 'https://picsum.photos/seed/slide1/1200/800',
-    youtubeId: 'NWPzwV3le50',
+    youtubeId: 'gJKxIAmhbvg',
   },
   {
     id: '2',
     title: 'VERMILION',
     category: 'visual narrative',
     role: 'CINEMATOGRAPHER',
-    imageUrl: 'https://picsum.photos/seed/slide2/1200/800',
-    youtubeId: 'lhdHDEhtMiI',
+    youtubeId: 'QdEZtNyJb5g',
   },
   {
     id: '3',
     title: 'NOCTURNE',
     category: 'cinematography',
     role: 'DIRECTOR / VISIONARY',
-    imageUrl: 'https://picsum.photos/seed/slide3/1200/800',
-    youtubeId: 'nHSssoiMRE4',
+    youtubeId: 'O1p-JVaAQV0',
   },
 ];
 
@@ -94,7 +90,7 @@ export function VaelSlider() {
             return (
               <div 
                 key={slide.id} 
-                className="embla__slide flex-[0_0_80%] md:flex-[0_0_55%] min-w-0 px-4 md:px-10 relative"
+                className="embla__slide flex-[0_0_80%] md:flex-[0_0_40%] min-w-0 px-4 md:px-10 relative"
                 onClick={() => setSelectedVideo(slide)}
               >
                 <motion.div
@@ -106,7 +102,7 @@ export function VaelSlider() {
                   transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
                   className="relative aspect-[16/9] md:aspect-[21/9] overflow-hidden shadow-[0_60px_120px_-20px_rgba(0,0,0,0.9)] bg-black group cursor-pointer border border-white/5 rounded-none"
                 >
-                  <div className="absolute inset-0 pointer-events-none transform scale-[1.4]">
+                  <div className="absolute inset-0 pointer-events-none transform scale-[1.3]">
                     <iframe
                       className="w-full h-full"
                       src={getYoutubeEmbed(slide.youtubeId, isActive)}
@@ -117,6 +113,11 @@ export function VaelSlider() {
                   
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-10" />
                   <div className="absolute inset-0 cinematic-vignette opacity-60 z-10" />
+                  
+                  <div className="absolute bottom-8 left-8 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
+                     <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{slide.role}</span>
+                     <h3 className="text-2xl md:text-4xl font-headline text-white italic tracking-tighter">{slide.title}</h3>
+                  </div>
                 </motion.div>
               </div>
             );
@@ -178,8 +179,6 @@ export function VaelSlider() {
                     </div>
                     <span className="sr-only">Close Player</span>
                   </DialogClose>
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/40 pointer-events-none" />
                 </motion.div>
               )}
             </AnimatePresence>
