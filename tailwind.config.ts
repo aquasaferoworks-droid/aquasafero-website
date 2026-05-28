@@ -11,7 +11,7 @@ export default {
     extend: {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
-        headline: ['Literata', 'serif'],
+        headline: ['Instrument Serif', 'serif'],
         code: ['monospace'],
       },
       colors: {
