@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Dialog,
@@ -93,7 +93,7 @@ export function VaelSlider() {
   };
 
   return (
-    <section className="relative w-full bg-background pt-32 pb-24 md:pt-48 md:pb-40 min-h-[85vh] flex flex-col justify-center overflow-hidden select-none">
+    <section className="relative w-full bg-background pt-32 pb-24 md:pt-48 md:pb-40 min-h-[90vh] flex flex-col justify-center overflow-hidden select-none">
       <div className="embla overflow-visible" ref={emblaRef}>
         <div className="embla__container flex">
           {slides.map((slide, index) => {
@@ -125,12 +125,6 @@ export function VaelSlider() {
                   
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-10" />
                   <div className="absolute inset-0 cinematic-vignette opacity-60 z-10" />
-
-                  <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                    <div className="w-20 h-20 md:w-32 md:h-32 rounded-full border border-white/10 bg-black/30 backdrop-blur-md flex items-center justify-center transition-all duration-500 hover:scale-110 hover:bg-primary/20 hover:border-primary/40">
-                      <Play className="w-8 h-8 md:w-12 md:h-12 text-white fill-white ml-2" />
-                    </div>
-                  </div>
                 </motion.div>
               </div>
             );
@@ -179,7 +173,6 @@ export function VaelSlider() {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   />
 
-                  {/* Elegant Metadata Overlay */}
                   <div className="absolute top-6 left-8 z-[70] pointer-events-none drop-shadow-lg">
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold">{selectedVideo.role}</span>
@@ -187,7 +180,6 @@ export function VaelSlider() {
                     </div>
                   </div>
 
-                  {/* Premium Close Button */}
                   <DialogClose className="absolute top-6 right-6 z-[80] transition-all duration-300 group/close">
                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center group-hover/close:border-primary/50 group-hover/close:scale-110 transition-all">
                       <X className="w-5 h-5 md:w-6 md:h-6 text-white group-hover/close:text-primary transition-colors" strokeWidth={1.5} />

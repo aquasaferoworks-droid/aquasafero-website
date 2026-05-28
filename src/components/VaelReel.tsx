@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -56,13 +56,7 @@ const VideoCard = ({ video, aspectRatio, className = "", onClick }: VideoCardPro
       <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-700 z-10" />
       <div className="absolute inset-0 cinematic-vignette opacity-50 z-10" />
       
-      <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-primary/40 bg-black/20 backdrop-blur-md flex items-center justify-center">
-          <Play className="w-5 h-5 md:w-6 md:h-6 text-primary fill-primary" />
-        </div>
-      </div>
-      
-      <div className="absolute inset-0 border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none" />
+      <div className="absolute inset-0 border border-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none" />
     </motion.div>
   );
 };
@@ -148,7 +142,6 @@ export function VaelReel() {
                     allowFullScreen
                   />
 
-                  {/* Elegant Metadata Overlay */}
                   <div className="absolute top-6 left-8 z-[70] pointer-events-none drop-shadow-lg">
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold">{selectedVideo.category}</span>
@@ -156,7 +149,6 @@ export function VaelReel() {
                     </div>
                   </div>
 
-                  {/* Premium Close Button */}
                   <DialogClose className="absolute top-6 right-6 z-[80] transition-all duration-300 group/close">
                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center group-hover/close:border-primary/50 group-hover/close:scale-110 transition-all">
                       <X className="w-5 h-5 md:w-6 md:h-6 text-white group-hover/close:text-primary transition-colors" strokeWidth={1.5} />
