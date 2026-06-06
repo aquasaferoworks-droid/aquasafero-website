@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useFirestore, useCollection } from '@/firebase';
-import { collection, addDoc, deleteDoc, doc, serverTimestamp, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List, Sparkles, AlertCircle } from 'lucide-react';
+import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List, AlertCircle } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -26,7 +26,6 @@ export default function AdminPage() {
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isAdding, setIsAdding] = useState(false);
-  const [isSeeding, setIsSeeding] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     category: '',
@@ -89,35 +88,6 @@ export default function AdminPage() {
       });
     } finally {
       setIsAdding(false);
-    }
-  };
-
-  const seedShowcase = async () => {
-    if (!firestore) return;
-    setIsSeeding(true);
-    
-    try {
-      const batch = writeBatch(firestore);
-      const defaultProjects = [
-        { title: 'HAWTHORN', youtubeId: 'NWPzwV3le50', type: 'slider', role: 'Director', category: 'Narrative', order: 1, meta: '2024 • ARRI ALEXA LF' },
-        { title: 'VERMILION', youtubeId: 'lhdHDEhtMiI', type: 'slider', role: 'Director', category: 'Commercial', order: 2, meta: '2024 • 35MM FILM' },
-        { title: 'NOCTURNE', youtubeId: 'nHSssoiMRE4', type: 'slider', role: 'Director', category: 'Documentary', order: 3, meta: '2023 • 16MM KODAK' },
-        { title: 'VERTICAL ONE', youtubeId: 'NWPzwV3le50', type: 'reel-vertical', role: 'Director', category: 'Fashion', order: 4, meta: 'MUMBAI' },
-        { title: 'VERTICAL TWO', youtubeId: 'lhdHDEhtMiI', type: 'reel-vertical', role: 'Director', category: 'Lifestyle', order: 5, meta: 'LONDON' },
-        { title: 'VERTICAL THREE', youtubeId: 'nHSssoiMRE4', type: 'reel-vertical', role: 'Director', category: 'Art', order: 6, meta: 'NYC' },
-      ];
-
-      defaultProjects.forEach(proj => {
-        const newDoc = doc(collection(firestore, 'videos'));
-        batch.set(newDoc, { ...proj, createdAt: serverTimestamp() });
-      });
-      
-      await batch.commit();
-      toast({ title: "Showcase Seeded", description: "Flagship films added successfully." });
-    } catch (error: any) {
-      toast({ title: "Seed Failed", description: error.message, variant: "destructive" });
-    } finally {
-      setIsSeeding(false);
     }
   };
 
@@ -189,23 +159,16 @@ export default function AdminPage() {
               {isAdding ? 'Publishing...' : 'Publish Film'}
             </Button>
           </form>
-
-          <div className="mt-auto pt-10">
-            <Button onClick={seedShowcase} disabled={isSeeding} variant="outline" className="w-full rounded-none border-primary/20 text-primary/60 hover:text-primary hover:border-primary py-4 h-auto text-[9px] tracking-[0.2em] uppercase transition-all">
-              {isSeeding ? <Loader2 className="animate-spin w-3 h-3 mr-2" /> : <Sparkles className="mr-2 w-3 h-3" />}
-              Seed Initial Showcase
-            </Button>
-          </div>
         </aside>
 
         <div className="flex-1 p-8 md:p-16">
           <div className="max-w-6xl mx-auto space-y-12">
-            {videosError && (
+            {(videosError || videosLoading === false && (!videos || videos.length === 0)) && (
               <Alert variant="destructive" className="rounded-none bg-destructive/10 border-destructive/20">
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle className="text-[10px] uppercase tracking-widest font-bold">Permissions Required</AlertTitle>
                 <AlertDescription className="text-[11px] leading-relaxed opacity-80 uppercase tracking-tight">
-                  Your Firestore Rules are blocking access. Please update your rules in the Firebase Console to 'allow read, write: if true;' to enable direct public management.
+                  If you see "Missing Permissions", please update your Firestore Rules in the Firebase Console to 'allow read, write: if true;'. This allows anyone to manage the archive as requested.
                 </AlertDescription>
               </Alert>
             )}
