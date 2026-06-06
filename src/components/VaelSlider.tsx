@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -8,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFirestore, useCollection } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import {
   Dialog,
@@ -27,6 +26,7 @@ interface VideoData {
   youtubeId: string;
   role: string;
   type: string;
+  order?: number;
 }
 
 export function VaelSlider() {
@@ -46,13 +46,15 @@ export function VaelSlider() {
 
   const heroQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'videos'), orderBy('order', 'asc'));
+    return collection(firestore, 'videos');
   }, [firestore]);
 
   const { data: allVideos, loading } = useCollection(heroQuery);
   
-  // Local filtering to avoid Firestore Composite Index requirements
-  const slides = (allVideos as VideoData[] || []).filter(v => v.type === 'slider');
+  // Local filtering and sorting to avoid index requirements
+  const slides = (allVideos as VideoData[] || [])
+    .filter(v => v.type === 'slider')
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -72,7 +74,7 @@ export function VaelSlider() {
     return base + params;
   };
 
-  if (!loading && (!slides || slides.length === 0)) return null;
+  if (loading || !slides || slides.length === 0) return null;
 
   return (
     <section className="relative w-full bg-black pt-32 pb-24 md:pt-48 md:pb-40 min-h-[100vh] flex flex-col justify-center overflow-hidden select-none">
@@ -110,7 +112,7 @@ export function VaelSlider() {
                   
                   <div className="absolute bottom-8 left-8 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
                      <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{slide.role}</span>
-                     <h3 className="text-2xl md:text-4xl font-headline text-white italic tracking-tighter">{slide.title}</h3>
+                     <h3 className="text-2xl md:text-4xl font-headline text-white italic tracking-tighter uppercase">{slide.title}</h3>
                   </div>
                 </motion.div>
               </div>
@@ -144,7 +146,7 @@ export function VaelSlider() {
               Viewing {selectedVideo?.title} directed by Errol Aditya.
             </DialogDescription>
             
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
               {selectedVideo && (
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -164,7 +166,7 @@ export function VaelSlider() {
                   <div className="absolute top-8 left-10 z-[70] pointer-events-none drop-shadow-lg">
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold">{selectedVideo.role}</span>
-                      <span className="text-2xl md:text-3xl tracking-tight text-white italic font-headline font-bold">{selectedVideo.title}</span>
+                      <span className="text-2xl md:text-3xl tracking-tight text-white italic font-headline font-bold uppercase">{selectedVideo.title}</span>
                     </div>
                   </div>
 

@@ -1,11 +1,10 @@
-
 'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useFirestore, useCollection } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import {
   Dialog,
@@ -23,6 +22,7 @@ interface VideoItem {
   category: string;
   youtubeId: string;
   type: string;
+  order?: number;
 }
 
 interface VideoCardProps {
@@ -64,7 +64,7 @@ const VideoCard = ({ video, aspectRatio, className = "", onClick }: VideoCardPro
       
       <div className="absolute bottom-6 left-6 z-20 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
         <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{video.category}</span>
-        <h3 className="text-lg md:text-xl font-headline text-white italic tracking-tighter">{video.title}</h3>
+        <h3 className="text-lg md:text-xl font-headline text-white italic tracking-tighter uppercase">{video.title}</h3>
       </div>
     </motion.div>
   );
@@ -76,7 +76,7 @@ export function VaelReel() {
 
   const reelQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'videos'), orderBy('order', 'asc'));
+    return collection(firestore, 'videos');
   }, [firestore]);
 
   const { data: allVideos, loading } = useCollection(reelQuery);
@@ -85,21 +85,20 @@ export function VaelReel() {
     return `https://www.youtube.com/embed/${id}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
   };
 
-  const videos = allVideos as VideoItem[] || [];
+  // Local filtering and sorting to avoid index/permission constraints
+  const videos = (allVideos as VideoItem[] || []).sort((a, b) => (a.order || 0) - (b.order || 0));
   
-  // Local filtering to avoid Firestore Composite Index requirements
   const horizontals = videos.filter(v => v.type === 'reel-horizontal');
   const feature = videos.find(v => v.type === 'reel-feature');
   const mediums = videos.filter(v => v.type === 'reel-medium');
   const verticals = videos.filter(v => v.type === 'reel-vertical');
 
-  if (!loading && videos.length === 0) return null;
+  if (loading || videos.length === 0) return null;
 
   return (
     <section id="reel" className="py-24 md:py-32 bg-background overflow-hidden border-t border-border/10">
       <div className="max-w-[1600px] mx-auto px-4 md:px-16 space-y-4 md:space-y-8">
         
-        {/* Row 1 & 2 -> horizontal video cards */}
         {horizontals.length > 0 && (
           <div className="grid grid-cols-2 gap-4 md:gap-8">
             {horizontals.map(video => (
@@ -108,14 +107,12 @@ export function VaelReel() {
           </div>
         )}
 
-        {/* Featured Wide */}
         {feature && (
           <div className="w-full">
             <VideoCard video={feature as VideoItem} aspectRatio="aspect-[21/9]" onClick={setSelectedVideo} />
           </div>
         )}
 
-        {/* Medium Cards */}
         {mediums.length > 0 && (
           <div className="grid grid-cols-2 gap-4 md:gap-8">
             {mediums.map(video => (
@@ -124,7 +121,6 @@ export function VaelReel() {
           </div>
         )}
 
-        {/* Vertical Reel Section */}
         {verticals.length > 0 && (
           <div className="grid grid-cols-3 gap-4 md:gap-8">
             {verticals.slice(0, 3).map(video => (
@@ -146,7 +142,7 @@ export function VaelReel() {
               Viewing {selectedVideo?.title} directed by Errol Aditya.
             </DialogDescription>
             
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
               {selectedVideo && (
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -166,7 +162,7 @@ export function VaelReel() {
                   <div className="absolute top-6 left-8 z-[210] pointer-events-none drop-shadow-lg">
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] tracking-[0.4em] text-primary uppercase font-bold">{selectedVideo.category}</span>
-                      <span className="text-2xl md:text-3xl tracking-tight text-white italic font-headline font-bold">{selectedVideo.title}</span>
+                      <span className="text-2xl md:text-3xl tracking-tight text-white italic font-headline font-bold uppercase">{selectedVideo.title}</span>
                     </div>
                   </div>
 
