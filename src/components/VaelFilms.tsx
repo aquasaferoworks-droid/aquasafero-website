@@ -1,10 +1,9 @@
-
 'use client';
 
 import Image from 'next/image';
 import { useState } from 'react';
 import { useFirestore, useCollection } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 
 export function VaelFilms() {
@@ -13,13 +12,14 @@ export function VaelFilms() {
 
   const galleryQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'videos'), orderBy('order', 'asc'));
+    return collection(firestore, 'videos');
   }, [firestore]);
 
   const { data: allVideos, loading } = useCollection(galleryQuery);
   
-  // Local filtering to avoid Firestore Composite Index requirements
-  const films = (allVideos || []).filter((v: any) => v.type === 'film-gallery');
+  const films = (allVideos || [])
+    .filter((v: any) => v.type === 'film-gallery')
+    .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
   const getCleanYoutubeEmbed = (id: string, isHovered: boolean) => {
     return `https://www.youtube.com/embed/${id}?autoplay=${isHovered ? 1 : 0}&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;

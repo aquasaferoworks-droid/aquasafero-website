@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useFirestore, useCollection } from '@/firebase';
-import { collection, addDoc, deleteDoc, doc, serverTimestamp, query, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -38,7 +38,6 @@ export default function AdminPage() {
     order: 0
   });
 
-  // Simple query to avoid composite index and permission issues during initial setup
   const videosQuery = useMemoFirebase(() => {
     if (!firestore) return null;
     return collection(firestore, 'videos');
@@ -46,7 +45,6 @@ export default function AdminPage() {
 
   const { data: rawVideos, loading: videosLoading, error: videosError } = useCollection(videosQuery);
 
-  // In-memory sorting to avoid Index requirements
   const videos = (rawVideos || []).sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
   const extractYoutubeId = (urlOrId: string) => {
@@ -86,7 +84,7 @@ export default function AdminPage() {
       console.error('Error adding film:', error);
       toast({ 
         title: "Permission Denied", 
-        description: "Please check your Firestore Rules in Firebase Console.", 
+        description: "Please update your Firestore Rules to 'allow read, write: if true;'.", 
         variant: "destructive" 
       });
     } finally {
