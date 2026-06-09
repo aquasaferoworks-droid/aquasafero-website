@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -13,7 +14,7 @@ import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-const CATEGORIES = [
+const PLACEMENT_TYPES = [
   { value: 'slider', label: 'Scroll Videos (Hero Slider)', icon: Film },
   { value: 'reel-horizontal', label: 'Small Box (Horizontal)', icon: LayoutGrid },
   { value: 'reel-medium', label: 'Small Box (Medium)', icon: LayoutGrid },
@@ -22,13 +23,25 @@ const CATEGORIES = [
   { value: 'film-gallery', label: 'Filmography List', icon: List },
 ];
 
+const CATEGORIES = [
+  'celebrity',
+  'ads',
+  'promo',
+  'humor',
+  'cricketers',
+  'vfx',
+  'home&living',
+  'car',
+  'food'
+];
+
 export default function AdminPage() {
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    category: '',
+    category: 'ads',
     youtubeId: '',
     type: 'slider',
     role: 'Director',
@@ -71,7 +84,7 @@ export default function AdminPage() {
       
       setFormData({
         title: '',
-        category: '',
+        category: formData.category,
         youtubeId: '',
         type: formData.type,
         role: 'Director',
@@ -83,7 +96,7 @@ export default function AdminPage() {
       console.error('Error adding film:', error);
       toast({ 
         title: "Permission Denied", 
-        description: "Please update your Firestore Rules to 'allow read, write: if true;'.", 
+        description: "Please check your Firestore rules.", 
         variant: "destructive" 
       });
     } finally {
@@ -105,7 +118,7 @@ export default function AdminPage() {
     <main className="min-h-screen bg-background">
       <VaelHeader />
       
-      <div className="flex pt-24 min-h-screen">
+      <div className="flex pt-32 md:pt-40 min-h-screen">
         <aside className="w-80 border-r border-white/5 bg-card/20 hidden lg:flex flex-col sticky top-24 h-[calc(100vh-6rem)] p-8 overflow-y-auto">
           <div className="mb-10">
             <h2 className="text-[10px] tracking-[0.5em] uppercase text-primary font-bold mb-4">Archive Management</h2>
@@ -123,9 +136,25 @@ export default function AdminPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-none bg-black border-white/10">
-                    {CATEGORIES.map(cat => (
+                    {PLACEMENT_TYPES.map(cat => (
                       <SelectItem key={cat.value} value={cat.value} className="text-[10px] uppercase tracking-widest">
                         {cat.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Genre Category</Label>
+                <Select value={formData.category} onValueChange={val => setFormData({...formData, category: val})}>
+                  <SelectTrigger className="rounded-none bg-background border-white/10 h-11">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-none bg-black border-white/10">
+                    {CATEGORIES.map(cat => (
+                      <SelectItem key={cat} value={cat} className="text-[10px] uppercase tracking-widest">
+                        {cat}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -142,15 +171,9 @@ export default function AdminPage() {
                 <Input required placeholder="Link..." className="rounded-none bg-background border-white/10 h-11" value={formData.youtubeId} onChange={e => setFormData({...formData, youtubeId: e.target.value})} />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Category</Label>
-                  <Input placeholder="Genre..." className="rounded-none bg-background border-white/10 h-11" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Order</Label>
-                  <Input type="number" className="rounded-none bg-background border-white/10 h-11" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
-                </div>
+              <div className="space-y-2">
+                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Order</Label>
+                <Input type="number" className="rounded-none bg-background border-white/10 h-11" value={formData.order} onChange={e => setFormData({...formData, order: Number(e.target.value)})} />
               </div>
             </div>
 
@@ -168,7 +191,7 @@ export default function AdminPage() {
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle className="text-[10px] uppercase tracking-widest font-bold">Permissions Required</AlertTitle>
                 <AlertDescription className="text-[11px] leading-relaxed opacity-80 uppercase tracking-tight">
-                  If you see "Missing Permissions", please update your Firestore Rules in the Firebase Console to 'allow read, write: if true;'. This allows anyone to manage the archive as requested.
+                  If you see "Missing Permissions", please update your Firestore Rules in the Firebase Console to 'allow read, write: if true;'.
                 </AlertDescription>
               </Alert>
             )}
@@ -194,8 +217,8 @@ export default function AdminPage() {
               )}
               
               {!videosLoading && videos?.map((video) => {
-                const category = CATEGORIES.find(c => c.value === video.type);
-                const CategoryIcon = category?.icon || Film;
+                const placement = PLACEMENT_TYPES.find(c => c.value === video.type);
+                const PlacementIcon = placement?.icon || Film;
 
                 return (
                   <div key={video.id} className="bg-card/20 border border-white/5 p-4 flex items-center justify-between group hover:border-primary/20 transition-all">
@@ -206,10 +229,10 @@ export default function AdminPage() {
                       <div className="space-y-1">
                         <h3 className="text-lg font-headline italic tracking-tight uppercase">{video.title}</h3>
                         <div className="flex items-center gap-3">
-                          <CategoryIcon className="w-3 h-3 text-primary" />
-                          <span className="text-[8px] uppercase tracking-[0.2em] text-primary font-bold">{category?.label.split('(')[0]}</span>
+                          <PlacementIcon className="w-3 h-3 text-primary" />
+                          <span className="text-[8px] uppercase tracking-[0.2em] text-primary font-bold">{placement?.label.split('(')[0]}</span>
                           <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground">•</span>
-                          <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground">{video.category || 'NO TAG'}</span>
+                          <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground">{video.category || 'NO GENRE'}</span>
                         </div>
                       </div>
                     </div>
