@@ -9,11 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
-import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List, AlertCircle, Award, Tag, Info } from 'lucide-react';
+import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List, AlertCircle, Award, Tag, Info, Check } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { cn } from '@/lib/utils';
 
 const PLACEMENT_TYPES = [
   { value: 'slider', label: 'Scroll Videos (Hero Slider)', icon: Film },
@@ -42,7 +44,7 @@ export default function AdminPage() {
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    category: 'ads',
+    category: ['ads'] as string[],
     youtubeId: '',
     type: 'slider',
     role: 'Director',
@@ -73,10 +75,26 @@ export default function AdminPage() {
     return (match && match[2].length === 11) ? match[2] : urlOrId;
   };
 
+  const handleCategoryToggle = (cat: string) => {
+    setFormData(prev => {
+      const current = prev.category;
+      if (current.includes(cat)) {
+        return { ...prev, category: current.filter(c => c !== cat) };
+      } else {
+        return { ...prev, category: [...current, cat] };
+      }
+    });
+  };
+
   const handleAddVideo = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!firestore) return;
     
+    if (formData.category.length === 0) {
+      toast({ title: "Selection Required", description: "Please select at least one genre.", variant: "destructive" });
+      return;
+    }
+
     setIsAdding(true);
     const cleanId = extractYoutubeId(formData.youtubeId);
 
@@ -92,7 +110,7 @@ export default function AdminPage() {
       
       setFormData({
         title: '',
-        category: formData.category,
+        category: [formData.category[0] || 'ads'],
         youtubeId: '',
         type: formData.type,
         role: 'Director',
@@ -153,20 +171,29 @@ export default function AdminPage() {
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Genre Category</Label>
-                <Select value={formData.category} onValueChange={val => setFormData({...formData, category: val})}>
-                  <SelectTrigger className="rounded-none bg-background border-white/10 h-11 text-[10px] uppercase">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-none bg-black border-white/10">
-                    {CATEGORIES.map(cat => (
-                      <SelectItem key={cat} value={cat} className="text-[10px] uppercase tracking-widest cursor-pointer">
+              <div className="space-y-3">
+                <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Genres (Select Multiple)</Label>
+                <div className="grid grid-cols-1 gap-2 border border-white/5 p-3 bg-black/40">
+                  {CATEGORIES.map(cat => (
+                    <div key={cat} className="flex items-center space-x-2">
+                      <Checkbox 
+                        id={`cat-${cat}`} 
+                        checked={formData.category.includes(cat)} 
+                        onCheckedChange={() => handleCategoryToggle(cat)}
+                        className="border-white/20 data-[state=checked]:bg-primary data-[state=checked]:text-black"
+                      />
+                      <label 
+                        htmlFor={`cat-${cat}`}
+                        className={cn(
+                          "text-[9px] uppercase tracking-widest cursor-pointer transition-colors",
+                          formData.category.includes(cat) ? "text-primary font-bold" : "text-muted-foreground"
+                        )}
+                      >
                         {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -262,8 +289,11 @@ export default function AdminPage() {
                             </div>
                             <div className="space-y-2">
                               <h3 className="text-xl font-headline italic tracking-tight uppercase leading-none">{video.title}</h3>
-                              <div className="flex items-center gap-4">
-                                <span className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.1em] text-primary font-bold"><Tag className="w-2.5 h-2.5" /> {video.category}</span>
+                              <div className="flex flex-wrap items-center gap-4">
+                                <span className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.1em] text-primary font-bold">
+                                  <Tag className="w-2.5 h-2.5" /> 
+                                  {Array.isArray(video.category) ? video.category.join(', ') : video.category}
+                                </span>
                                 <span className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.1em] text-white/40"><Info className="w-2.5 h-2.5" /> {video.meta || 'No Meta'}</span>
                                 <span className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.1em] text-white/40"><Award className="w-2.5 h-2.5" /> {video.award || 'No Awards'}</span>
                               </div>

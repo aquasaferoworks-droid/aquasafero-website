@@ -29,7 +29,13 @@ export function VaelFilms() {
 
   const films = activeCategory === 'all' 
     ? rawFilms 
-    : rawFilms.filter((v: any) => v.category?.toLowerCase() === activeCategory.toLowerCase());
+    : rawFilms.filter((v: any) => {
+        const categoryData = v.category;
+        if (Array.isArray(categoryData)) {
+          return categoryData.some(c => c.toLowerCase() === activeCategory.toLowerCase());
+        }
+        return categoryData?.toLowerCase() === activeCategory.toLowerCase();
+      });
 
   const getCleanYoutubeEmbed = (id: string, isHovered: boolean) => {
     return `https://www.youtube.com/embed/${id}?autoplay=${isHovered ? 1 : 0}&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=${id}&enablejsapi=1`;
@@ -111,7 +117,9 @@ export function VaelFilms() {
                       </div>
                       
                       <div className="text-right hidden sm:block">
-                        <span className="text-[8px] tracking-[0.5em] text-white/50 uppercase block mb-1 font-medium">{film.category}</span>
+                        <span className="text-[8px] tracking-[0.5em] text-white/50 uppercase block mb-1 font-medium">
+                          {Array.isArray(film.category) ? film.category.join(', ') : film.category}
+                        </span>
                         {film.meta && (
                           <div className="flex items-center justify-end gap-1.5 text-white/30">
                             <Camera className="w-2.5 h-2.5" />
