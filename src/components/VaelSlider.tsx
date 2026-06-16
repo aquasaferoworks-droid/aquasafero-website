@@ -77,7 +77,7 @@ export function VaelSlider() {
   if (loading || slides.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-black pt-24 pb-12 md:pt-32 md:pb-24 min-h-[70vh] flex flex-col justify-center overflow-hidden select-none">
+    <section className="relative w-full bg-black pt-40 pb-12 md:pt-52 md:pb-24 min-h-[70vh] flex flex-col justify-center overflow-hidden select-none">
       <div className="container mx-auto px-6 mb-8 md:mb-12">
         <div className="flex items-center gap-4">
           <div className="w-8 h-px bg-primary" />
@@ -93,16 +93,16 @@ export function VaelSlider() {
             return (
               <div 
                 key={slide.id} 
-                className="embla__slide flex-[0_0_90%] md:flex-[0_0_75%] lg:flex-[0_0_65%] min-w-0 px-2 md:px-6 relative"
+                className="embla__slide flex-[0_0_95%] md:flex-[0_0_85%] lg:flex-[0_0_80%] min-w-0 px-2 md:px-6 relative"
                 onClick={() => setSelectedVideo(slide)}
               >
                 <motion.div
                   initial={false}
                   animate={{ 
-                    scale: isActive ? 1.02 : 0.9,
-                    opacity: isActive ? 1 : 0.4,
+                    scale: isActive ? 1.02 : 0.85,
+                    opacity: isActive ? 1 : 0.3,
                   }}
-                  transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+                  transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
                   className="relative aspect-video md:aspect-[21/9] overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.9)] bg-zinc-900 group cursor-pointer border border-white/5 rounded-none"
                 >
                   <div className="absolute inset-0 z-0">
