@@ -1,10 +1,10 @@
+
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useFirestore, useCollection } from '@/firebase';
 import { collection } from 'firebase/firestore';
@@ -14,7 +14,6 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
-  DialogClose,
   DialogPortal,
   DialogOverlay,
 } from '@/components/ui/dialog';
@@ -24,14 +23,15 @@ interface VideoData {
   title: string;
   category: string | string[];
   youtubeId: string;
-  upperText?: string;
-  lowerText?: string;
   type: string;
-  award?: string;
   order?: number;
 }
 
-export function VaelSlider() {
+interface VaelSliderProps {
+  activeCategory: string;
+}
+
+export function VaelSlider({ activeCategory }: VaelSliderProps) {
   const firestore = useFirestore();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedVideo, setSelectedVideo] = useState<VideoData | null>(null);
@@ -44,7 +44,13 @@ export function VaelSlider() {
   const { data: allVideos, loading } = useCollection(heroQuery);
   
   const slides = (allVideos as VideoData[] || [])
-    .filter(v => v.type === 'slider')
+    .filter(v => {
+      const isSlider = v.type === 'slider';
+      if (!isSlider) return false;
+      if (activeCategory === 'all') return true;
+      const categories = Array.isArray(v.category) ? v.category : [v.category];
+      return categories.some(c => c?.toLowerCase() === activeCategory.toLowerCase());
+    })
     .sort((a, b) => (a.order || 0) - (b.order || 0));
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -57,8 +63,15 @@ export function VaelSlider() {
     [Autoplay({ delay: 6000, stopOnInteraction: true })]
   );
 
-  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const scrollPrev = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    emblaApi && emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    emblaApi && emblaApi.scrollNext();
+  }, [emblaApi]);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -78,7 +91,7 @@ export function VaelSlider() {
   if (loading || slides.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-black pt-4 md:pt-6 pb-2 md:pb-4 flex flex-col justify-center overflow-hidden select-none">
+    <section className="relative w-full bg-black pb-8 md:pb-12 flex flex-col justify-center overflow-hidden select-none">
       <div className="relative">
         <div className="embla overflow-visible" ref={emblaRef}>
           <div className="embla__container flex items-center">
@@ -88,7 +101,7 @@ export function VaelSlider() {
               return (
                 <div 
                   key={slide.id} 
-                  className="embla__slide flex-[0_0_75%] md:flex-[0_0_75%] min-w-0 px-2 md:px-4 relative"
+                  className="embla__slide flex-[0_0_80%] md:flex-[0_0_75%] min-w-0 px-2 md:px-4 relative"
                   onClick={() => isActive && setSelectedVideo(slide)}
                 >
                   <motion.div
@@ -109,7 +122,6 @@ export function VaelSlider() {
                         priority={isActive}
                       />
                     </div>
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
                   </motion.div>
                 </div>
               );
@@ -117,18 +129,18 @@ export function VaelSlider() {
           </div>
         </div>
 
-        <div className="absolute bottom-4 left-0 right-0 flex justify-between items-center px-[8%] pointer-events-none md:px-[15%]">
+        <div className="absolute bottom-6 left-0 right-0 flex justify-between items-center px-[10%] pointer-events-none md:px-[15%]">
           <button 
             onClick={scrollPrev}
             className="pointer-events-auto flex items-center gap-2 group/btn"
           >
-            <span className="text-[9px] tracking-[0.4em] uppercase text-white/30 group-hover/btn:text-primary transition-colors font-bold">PREV</span>
+            <span className="text-[10px] tracking-[0.4em] uppercase text-white/30 group-hover/btn:text-primary transition-colors font-bold">PREV</span>
           </button>
           <button 
             onClick={scrollNext}
             className="pointer-events-auto flex items-center gap-2 group/btn"
           >
-            <span className="text-[9px] tracking-[0.4em] uppercase text-white/30 group-hover/btn:text-primary transition-colors font-bold">NEXT</span>
+            <span className="text-[10px] tracking-[0.4em] uppercase text-white/30 group-hover/btn:text-primary transition-colors font-bold">NEXT</span>
           </button>
         </div>
       </div>
@@ -142,11 +154,6 @@ export function VaelSlider() {
             {selectedVideo && (
               <div className="relative w-full h-full">
                 <iframe className="w-full h-full" src={getFullUrl(selectedVideo.youtubeId)} frameBorder="0" allowFullScreen />
-                <DialogClose className="absolute top-6 right-6 z-[201]">
-                  <div className="w-10 h-10 rounded-none bg-black/40 border border-white/10 flex items-center justify-center">
-                    <X className="w-5 h-5 text-white" />
-                  </div>
-                </DialogClose>
               </div>
             )}
           </DialogContent>
