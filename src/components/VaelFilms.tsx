@@ -53,13 +53,12 @@ export function VaelFilms() {
         <div className="space-y-6">
           <span className="text-[10px] tracking-[0.6em] uppercase text-primary/60 block font-medium">Work Showcase</span>
           <h2 className="text-5xl md:text-9xl font-headline leading-[0.85] italic tracking-tighter text-white uppercase">
-            {activeCategory} <br /> <span className="text-primary not-italic">Collection</span>
+            {activeCategory}
           </h2>
         </div>
         <div className="flex flex-col md:items-end gap-4">
           <p className="max-w-xs text-muted-foreground text-[10px] md:text-[11px] tracking-widest leading-relaxed uppercase font-body md:text-right">
             Displaying {films.length} curated projects.
-            {activeCategory !== 'all' && <span className="text-primary block mt-2">Filter: {activeCategory}</span>}
           </p>
         </div>
       </div>
@@ -78,7 +77,7 @@ export function VaelFilms() {
                 <div 
                   key={film.id} 
                   onClick={() => setSelectedFilm(film)}
-                  className="group relative overflow-hidden bg-black aspect-video cursor-pointer border border-white/5"
+                  className="group relative overflow-hidden bg-black aspect-video cursor-pointer border border-white/5 rounded-3xl"
                 >
                   <Image 
                     src={`https://img.youtube.com/vi/${film.youtubeId}/maxresdefault.jpg`} 
@@ -94,17 +93,15 @@ export function VaelFilms() {
                     </div>
                   </div>
 
-                  <div className="absolute inset-0 z-30 p-6 flex flex-col justify-between translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
-                    <div className="flex justify-between items-start">
-                       <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold bg-black/60 px-2 py-1 border border-primary/20">
-                         {Array.isArray(film.category) ? film.category[0] : film.category}
-                       </span>
-                    </div>
+                  <div className="absolute inset-x-4 bottom-4 z-30 p-4 md:p-6 backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl flex flex-col justify-end translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
                     <div className="flex justify-between items-end gap-4">
-                      <div className="flex-1">
-                        <span className="text-[7px] tracking-[0.5em] text-white/50 uppercase font-bold block mb-1">{film.upperText}</span>
+                      <div className="flex-1 min-w-0">
+                        <span className="text-[7px] tracking-[0.5em] text-white/50 uppercase font-bold block mb-1 truncate">{film.upperText}</span>
                         <h3 className="text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate">{film.lowerText || film.title}</h3>
                       </div>
+                       <span className="text-[8px] tracking-[0.4em] text-primary uppercase font-bold whitespace-nowrap">
+                         {Array.isArray(film.category) ? film.category[0] : film.category}
+                       </span>
                     </div>
                   </div>
                 </div>

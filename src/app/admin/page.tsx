@@ -6,7 +6,7 @@ import { collection, addDoc, deleteDoc, doc, serverTimestamp, writeBatch } from 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { VaelHeader } from '@/components/VaelHeader';
 import { Loader2, Plus, Trash2, ExternalLink, LayoutGrid, Film, Smartphone, Maximize, List, AlertCircle, Award, Tag, Sparkles, Box } from 'lucide-react';
 import { useMemoFirebase } from '@/firebase/firestore/use-collection';
@@ -57,7 +57,7 @@ const MASTER_DATA = [
   { title: "Kankhajura | Roshan", upperText: "Kankhuraja Ft. Roshan Mathew", lowerText: "Sony Liv", youtubeId: "cu3xh14RYGU", category: ["promo", "celebrity"], type: "reel-vertical", order: 10 },
   { title: "Criminal Justice S4", upperText: "Criminal Justice S4", lowerText: "Jio Hotstar", youtubeId: "nHSssoiMRE4", category: ["promo", "celebrity"], type: "reel-vertical", order: 11 },
 
-  // HERO SLIDERS
+  // HERO SLIDERS (Populating first 20 for slider)
   { title: "Sun King | Rajkummar", upperText: "Set the Scene", lowerText: "Sun King", youtubeId: "eFhx307ykrk", category: ["ads", "celebrity"], type: "slider", order: 12 },
   { title: "Aspirants | Zindagi ki Daud", upperText: "Aspirants | Zindagi Ki Daud", lowerText: "Prime Video", youtubeId: "BYhQMzGxHmg", category: ["promo", "celebrity"], type: "slider", order: 13 },
 ];
@@ -282,7 +282,7 @@ export default function AdminPage() {
 
             <header className="space-y-6">
               <h1 className="text-5xl md:text-8xl font-headline italic font-bold tracking-tighter uppercase leading-none">
-                Active <span className="text-primary not-italic font-light">Collection</span>
+                Active <span className="text-primary not-italic font-light">Archive</span>
               </h1>
             </header>
 
