@@ -38,26 +38,17 @@ const CATEGORIES = [
 ];
 
 const MASTER_DATA = [
-  // ROW 1 & 2 - HORIZONTAL
   { title: "Sleek Kitchens - Film 1", upperText: "Sleek Kitchen", lowerText: "Asian Paint", youtubeId: "xTrPSfbWa0w", category: ["ads", "home&living"], type: "reel-horizontal", order: 1 },
   { title: "Cleartrip Insurance | Son", upperText: "Insurance", lowerText: "Cleartrip", youtubeId: "4UATuJFYKfg", category: ["ads", "humor"], type: "reel-horizontal", order: 2 },
   { title: "Dabur | Pudin Hara", upperText: "Pudin Hara", lowerText: "Dabur", youtubeId: "gJKxIAmhbvg", category: ["ads", "vfx"], type: "reel-horizontal", order: 3 },
   { title: "Mahindra Zeo EV", upperText: "Zeo EV", lowerText: "Mahindra", youtubeId: "QdEZtNyJb5g", category: ["ads", "car"], type: "reel-horizontal", order: 4 },
-
-  // ROW 3 - FEATURE
   { title: "ALIA BHATT | LAYS", upperText: "Lays Wafer Style Ft. Alia Bhatt", lowerText: "PepsiCo", youtubeId: "9A3yNxNyzDw", category: ["ads", "celebrity", "vfx"], type: "reel-feature", order: 5 },
-
-  // ROW 4 - MEDIUM (Two items for a full row)
   { title: "Tata Nexon EV", upperText: "Tata Nexon EV", lowerText: "Tata Motors", youtubeId: "Qwh1Si0Uozs", category: ["ads", "car"], type: "reel-medium", order: 6 },
   { title: "Godrej Interio", upperText: "Interio", lowerText: "Godrej", youtubeId: "6_FgbBV43q8", category: ["ads", "home&living"], type: "reel-medium", order: 7 },
-
-  // ROW 5 - VERTICAL
   { title: "Snitch | Go Goa Gone", upperText: "Gone Goa Go", lowerText: "Snitch", youtubeId: "cb9-3Rgpn5E", category: ["ads", "humor"], type: "reel-vertical", order: 8 },
   { title: "Lays | Siddhant", upperText: "Lays Wafer Style Ft. Siddhant", lowerText: "PepsiCo", youtubeId: "qiKh3ktuJ2Y", category: ["ads", "celebrity", "food"], type: "reel-vertical", order: 9 },
   { title: "Kankhajura | Roshan", upperText: "Kankhuraja Ft. Roshan Mathew", lowerText: "Sony Liv", youtubeId: "cu3xh14RYGU", category: ["promo", "celebrity"], type: "reel-vertical", order: 10 },
   { title: "Criminal Justice S4", upperText: "Criminal Justice S4", lowerText: "Jio Hotstar", youtubeId: "nHSssoiMRE4", category: ["promo", "celebrity"], type: "reel-vertical", order: 11 },
-
-  // HERO SLIDERS
   { title: "Sun King | Rajkummar", upperText: "Set the Scene", lowerText: "Sun King", youtubeId: "eFhx307ykrk", category: ["ads", "celebrity"], type: "slider", order: 12 },
   { title: "Aspirants | Zindagi ki Daud", upperText: "Aspirants | Zindagi Ki Daud", lowerText: "Prime Video", youtubeId: "BYhQMzGxHmg", category: ["promo", "celebrity"], type: "slider", order: 13 },
 ];
@@ -235,11 +226,11 @@ export default function AdminPage() {
 
               <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Upper Text (Sub-Title)</Label>
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Upper Text</Label>
                   <Input placeholder="Ex: Sleek Kitchen" className="rounded-none bg-background border-white/10 h-11 text-xs" value={formData.upperText} onChange={e => setFormData({...formData, upperText: e.target.value})} />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Lower Text (Brand/Title)</Label>
+                  <Label className="text-[9px] uppercase tracking-widest text-muted-foreground">Lower Text</Label>
                   <Input required placeholder="Ex: Asian Paint" className="rounded-none bg-background border-white/10 h-11 text-sm font-headline italic" value={formData.lowerText} onChange={e => setFormData({...formData, lowerText: e.target.value})} />
                 </div>
               </div>
@@ -275,14 +266,14 @@ export default function AdminPage() {
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle className="text-[10px] uppercase tracking-widest font-bold">Permissions Required</AlertTitle>
                 <AlertDescription className="text-[11px] leading-relaxed uppercase tracking-tight">
-                  Please update your Firestore Rules to 'allow read, write: if true;'.
+                  Please update your Firestore Rules.
                 </AlertDescription>
               </Alert>
             )}
 
             <header className="space-y-6">
               <h1 className="text-5xl md:text-8xl font-headline italic font-bold tracking-tighter uppercase leading-none">
-                Active <span className="text-primary not-italic font-light">Archive</span>
+                Directorial <span className="text-primary not-italic font-light">Manager</span>
               </h1>
             </header>
 
@@ -324,7 +315,6 @@ export default function AdminPage() {
                                   <Tag className="w-2 h-2" /> 
                                   {Array.isArray(video.category) ? video.category.join(', ') : video.category}
                                 </span>
-                                {video.award && <span className="flex items-center gap-1.5 text-[7px] uppercase tracking-[0.1em] text-primary font-bold"><Award className="w-2 h-2" /> {video.award}</span>}
                               </div>
                             </div>
                           </div>

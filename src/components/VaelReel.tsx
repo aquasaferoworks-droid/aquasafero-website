@@ -51,16 +51,14 @@ const VideoCard = ({ video, aspectRatio, className, onClick }: { video: VideoIte
       </div>
       
       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700 z-10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent z-15" />
 
-      {/* Play Icon - Centered */}
       <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="w-16 h-16 rounded-full border border-primary flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div className="w-16 h-16 rounded-none border border-primary flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <Play className="w-6 h-6 text-primary fill-primary ml-1" />
         </div>
       </div>
       
-      {/* Bottom Content - Integrated without glossy card */}
       <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 transition-all duration-700 pointer-events-none">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-1 min-w-0">
