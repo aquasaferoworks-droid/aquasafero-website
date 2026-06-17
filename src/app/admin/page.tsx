@@ -57,7 +57,7 @@ const MASTER_DATA = [
   { title: "Kankhajura | Roshan", upperText: "Kankhuraja Ft. Roshan Mathew", lowerText: "Sony Liv", youtubeId: "cu3xh14RYGU", category: ["promo", "celebrity"], type: "reel-vertical", order: 10 },
   { title: "Criminal Justice S4", upperText: "Criminal Justice S4", lowerText: "Jio Hotstar", youtubeId: "nHSssoiMRE4", category: ["promo", "celebrity"], type: "reel-vertical", order: 11 },
 
-  // HERO SLIDERS (Populating first 20 for slider)
+  // HERO SLIDERS
   { title: "Sun King | Rajkummar", upperText: "Set the Scene", lowerText: "Sun King", youtubeId: "eFhx307ykrk", category: ["ads", "celebrity"], type: "slider", order: 12 },
   { title: "Aspirants | Zindagi ki Daud", upperText: "Aspirants | Zindagi Ki Daud", lowerText: "Prime Video", youtubeId: "BYhQMzGxHmg", category: ["promo", "celebrity"], type: "slider", order: 13 },
 ];
@@ -223,7 +223,7 @@ export default function AdminPage() {
                         id={`cat-${cat}`} 
                         checked={formData.category.includes(cat)} 
                         onCheckedChange={() => handleCategoryToggle(cat)}
-                        className="border-white/20 data-[state=checked]:bg-primary data-[state=checked]:text-black"
+                        className="rounded-none border-white/20 data-[state=checked]:bg-primary data-[state=checked]:text-black"
                       />
                       <label htmlFor={`cat-${cat}`} className={cn("text-[8px] uppercase tracking-widest cursor-pointer", formData.category.includes(cat) ? "text-primary font-bold" : "text-muted-foreground")}>
                         {cat}
@@ -308,9 +308,9 @@ export default function AdminPage() {
 
                     <div className="grid grid-cols-1 gap-4">
                       {sectionVideos.map((video) => (
-                        <div key={video.id} className="bg-card/20 border border-white/5 p-4 flex items-center justify-between group hover:border-primary/20 transition-all">
+                        <div key={video.id} className="bg-card/20 border border-white/5 p-4 flex items-center justify-between group hover:border-primary/20 transition-all rounded-none">
                           <div className="flex items-center gap-6 overflow-hidden">
-                            <div className="w-32 aspect-video bg-black relative overflow-hidden flex-shrink-0 border border-white/5">
+                            <div className="w-32 aspect-video bg-black relative overflow-hidden flex-shrink-0 border border-white/5 rounded-none">
                               <img src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`} alt="" className="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity" />
                               <div className="absolute top-1 left-1 bg-black/80 px-2 py-0.5 border border-white/10">
                                 <span className="text-[8px] font-bold text-primary">#{video.order}</span>

@@ -122,10 +122,10 @@ export function VaelSlider() {
                     </div>
                   </div>
 
-                  <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 z-30 flex items-end justify-between translate-y-4 group-hover:translate-y-0 transition-all duration-700">
+                  <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-30 flex items-end justify-between translate-y-4 group-hover:translate-y-0 transition-all duration-700">
                      <div className="space-y-1">
                         <span className="text-[9px] md:text-[10px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">{slide.upperText}</span>
-                        <h3 className="text-xl md:text-4xl font-headline text-white italic tracking-tighter uppercase leading-none">{slide.lowerText || slide.title}</h3>
+                        <h3 className="text-2xl md:text-5xl font-headline text-white italic tracking-tighter uppercase leading-none">{slide.lowerText || slide.title}</h3>
                      </div>
                      <div className="text-right space-y-2 hidden md:block">
                         {slide.award && (
@@ -151,7 +151,7 @@ export function VaelSlider() {
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
-          <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-2xl" />
+          <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-sm" />
           <DialogContent className="z-[300] max-w-[95vw] md:max-w-6xl bg-black border border-white/10 p-0 overflow-hidden shadow-[0_0_120px_rgba(0,0,0,1)] rounded-none aspect-video focus:outline-none">
             <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Cinematic archive entry directed by Errol Aditya</DialogDescription>

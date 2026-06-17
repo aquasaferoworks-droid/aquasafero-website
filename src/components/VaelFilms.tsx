@@ -77,7 +77,7 @@ export function VaelFilms() {
                 <div 
                   key={film.id} 
                   onClick={() => setSelectedFilm(film)}
-                  className="group relative overflow-hidden bg-black aspect-video cursor-pointer border border-white/5 rounded-3xl"
+                  className="group relative overflow-hidden bg-black aspect-video cursor-pointer border border-white/5 rounded-none"
                 >
                   <Image 
                     src={`https://img.youtube.com/vi/${film.youtubeId}/maxresdefault.jpg`} 
@@ -86,14 +86,15 @@ export function VaelFilms() {
                     className="object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60 group-hover:opacity-100"
                   />
                   <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10" />
                   
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
                     <div className="w-12 h-12 rounded-full border border-primary flex items-center justify-center bg-black/40 backdrop-blur-sm">
                       <Play className="w-4 h-4 text-primary fill-primary ml-0.5" />
                     </div>
                   </div>
 
-                  <div className="absolute inset-x-4 bottom-4 z-30 p-4 md:p-6 backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl flex flex-col justify-end translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
+                  <div className="absolute inset-x-0 bottom-0 z-30 p-6 md:p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
                     <div className="flex justify-between items-end gap-4">
                       <div className="flex-1 min-w-0">
                         <span className="text-[7px] tracking-[0.5em] text-white/50 uppercase font-bold block mb-1 truncate">{film.upperText}</span>
@@ -123,7 +124,7 @@ export function VaelFilms() {
 
       <Dialog open={!!selectedFilm} onOpenChange={(open) => !open && setSelectedFilm(null)}>
         <DialogPortal>
-          <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-2xl" />
+          <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-sm" />
           <DialogContent className="z-[300] max-w-[95vw] md:max-w-6xl bg-black border border-white/10 p-0 overflow-hidden rounded-none aspect-video focus:outline-none">
             <DialogTitle className="sr-only">{selectedFilm?.title}</DialogTitle>
             <DialogDescription className="sr-only">Viewing: {selectedFilm?.title}</DialogDescription>

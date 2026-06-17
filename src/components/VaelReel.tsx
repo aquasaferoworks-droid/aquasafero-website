@@ -33,13 +33,13 @@ interface VideoItem {
 const VideoCard = ({ video, aspectRatio, className, onClick }: { video: VideoItem, aspectRatio: string, className?: string, onClick: (v: VideoItem) => void }) => {
   return (
     <motion.div
-      className={`relative overflow-hidden bg-zinc-900 border border-white/5 group cursor-pointer ${aspectRatio} rounded-[2rem] shadow-2xl ${className}`}
+      className={`relative overflow-hidden bg-zinc-900 border border-white/5 group cursor-pointer ${aspectRatio} rounded-none shadow-2xl ${className}`}
       onClick={() => onClick(video)}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-      whileHover={{ scale: 1.015 }}
+      whileHover={{ scale: 1.01 }}
     >
       <div className="absolute inset-0 z-0">
         <Image 
@@ -51,24 +51,24 @@ const VideoCard = ({ video, aspectRatio, className, onClick }: { video: VideoIte
       </div>
       
       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-700 z-10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-15" />
 
       {/* Play Icon - Centered */}
       <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="w-16 h-16 rounded-full border border-primary flex items-center justify-center bg-black/40 backdrop-blur-xl">
+        <div className="w-16 h-16 rounded-full border border-primary flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <Play className="w-6 h-6 text-primary fill-primary ml-1" />
         </div>
       </div>
       
-      {/* Bottom Content Bar - Glassmorphism */}
-      <div className="absolute bottom-0 left-0 right-0 z-30 p-4 md:p-6 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 transition-all duration-700 pointer-events-none">
-        <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      {/* Bottom Content - Integrated without glossy card */}
+      <div className="absolute bottom-0 left-0 right-0 z-30 p-6 md:p-8 flex flex-col justify-end translate-y-2 group-hover:translate-y-0 transition-all duration-700 pointer-events-none">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-1 min-w-0">
             <span className="text-[8px] md:text-[9px] tracking-[0.4em] text-primary uppercase font-bold block mb-1">
               {Array.isArray(video.category) ? video.category[0] : video.category}
             </span>
             <span className="text-[7px] md:text-[8px] tracking-[0.5em] text-white/50 uppercase font-bold block truncate">{video.upperText}</span>
-            <h3 className="text-lg md:text-xl font-headline text-white italic tracking-tighter uppercase leading-none truncate">{video.lowerText || video.title}</h3>
+            <h3 className="text-xl md:text-2xl font-headline text-white italic tracking-tighter uppercase leading-none truncate">{video.lowerText || video.title}</h3>
           </div>
           
           <div className="flex items-center gap-4 flex-shrink-0">
@@ -142,7 +142,7 @@ export function VaelReel() {
           )}
         </div>
 
-        {/* Row 4: 2 Medium Video Cards (Ensuring exactly 2 for a full row) */}
+        {/* Row 4: 2 Medium Video Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {mediums.slice(0, 2).map((v) => (
             <VideoCard key={v.id} video={v} aspectRatio="aspect-video" onClick={setSelectedVideo} />
@@ -159,15 +159,15 @@ export function VaelReel() {
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogPortal>
-          <DialogOverlay className="z-[250] bg-black/90 backdrop-blur-xl" />
-          <DialogContent className="z-[300] max-w-[95vw] md:max-w-7xl bg-black border border-white/10 p-0 overflow-hidden rounded-[2.5rem] shadow-2xl aspect-video focus:outline-none">
+          <DialogOverlay className="z-[250] bg-black/95 backdrop-blur-sm" />
+          <DialogContent className="z-[300] max-w-[95vw] md:max-w-7xl bg-black border border-white/10 p-0 overflow-hidden rounded-none shadow-2xl aspect-video focus:outline-none">
             <DialogTitle className="sr-only">{selectedVideo?.title}</DialogTitle>
             <DialogDescription className="sr-only">Viewing project: {selectedVideo?.title}</DialogDescription>
             {selectedVideo && (
               <div className="relative w-full h-full">
                 <iframe className="w-full h-full" src={getFullUrl(selectedVideo.youtubeId)} frameBorder="0" allowFullScreen />
                 <DialogClose className="absolute top-8 right-8 z-[220]">
-                  <div className="w-12 h-12 bg-black/40 border border-white/10 flex items-center justify-center rounded-full backdrop-blur-md">
+                  <div className="w-12 h-12 bg-black/40 border border-white/10 flex items-center justify-center rounded-none backdrop-blur-md">
                     <X className="w-6 h-6 text-white" />
                   </div>
                 </DialogClose>
